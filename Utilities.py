@@ -9,3 +9,8 @@ def join_paths(paths):
         else:
             ret = join(ret, path)
     return ret
+
+
+def print_log(message, DEBUG):
+    if DEBUG:
+        print(message)
