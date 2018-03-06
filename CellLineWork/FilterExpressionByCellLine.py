@@ -11,4 +11,4 @@ def get_cohesive_cell_lines(cohesive_column_1, cohesive_column_2):
 
 if __name__ == "__main__":
     cohesive_sample_ids = get_cohesive_cell_lines('GE_CCLE_match', 'SNP_CL_match')
-    expression_matrix =
+    expression_matrix = None
