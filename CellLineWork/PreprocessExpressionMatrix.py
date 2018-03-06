@@ -67,11 +67,15 @@ def filter_genes(exp_matrix):
     return exp_matrix.loc[exp_matrix_values >= 5]
 
 
-if __name__ == '__main__':
+def pre_process_expression_matrix():
     expression_matrix = open_expression_mat()
     expression_matrix = normalize_by_cell(expression_matrix)
     expression_matrix = filter_cells(expression_matrix)
     expression_matrix = filter_genes(expression_matrix)
-    print(expression_matrix.head())
+    print_log(expression_matrix.head(), DEBUG)
     expression_matrix.to_pickle(join_paths([BasePaths.ExpressionProcessed]))
-    print('done')
+    return expression_matrix
+
+
+if __name__ == "__main__":
+    pre_process_expression_matrix()
