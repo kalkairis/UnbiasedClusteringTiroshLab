@@ -1,4 +1,5 @@
 from os.path import join
+import os
 
 
 def join_paths(paths):
@@ -9,6 +10,10 @@ def join_paths(paths):
         else:
             ret = join(ret, path)
     return ret
+
+
+def load_if_cached(path, created_function):
+    if os.path.exists(path):
 
 
 def print_log(message, DEBUG):
