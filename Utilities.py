@@ -1,5 +1,7 @@
 from os.path import join
 import os
+import pandas as pd
+import numpy as np
 
 
 def join_paths(paths):
@@ -14,6 +16,12 @@ def join_paths(paths):
 
 def load_if_cached(path, created_function):
     if os.path.exists(path):
+        try:
+            return pd.read_pickle(path)
+        except:
+            return np.load(path)
+    else:
+        return created_function()
 
 
 def print_log(message, DEBUG):
