@@ -1,4 +1,5 @@
 from Utilities import *
+from UploadFiles import bar_codes_mat_to_numpy
 import numpy as np
 from config import BasePaths
 import scipy.io as spio
@@ -12,7 +13,9 @@ DEBUG = False
 def open_expression_mat():
     ret = spio.mmread(BasePaths.ExpressionMatMatrix)
     ret = ret.todense()
-    ret = pd.DataFrame(data=ret)
+    barcodes = load_if_cached(BasePaths.BarCodes, bar_codes_mat_to_numpy)
+    print_log("barcodes: {}".format(barcodes), DEBUG)
+    ret = pd.DataFrame(data=ret, columns=barcodes)
     return ret
 
 
@@ -69,7 +72,7 @@ def filter_genes(exp_matrix):
 
 
 def pre_process_expression_matrix():
-    print_log(os.getcwd(), DEBU)
+    print_log(os.getcwd(), DEBUG)
     expression_matrix = open_expression_mat()
     expression_matrix = normalize_by_cell(expression_matrix)
     expression_matrix = filter_cells(expression_matrix)
