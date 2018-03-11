@@ -1,2 +1,2 @@
 # TiroshLab_iris
-My work in the Tirosh Lab.
+Collaborative work in the Tirosh Lab.
