@@ -1,5 +1,5 @@
 from Utilities import *
-from UploadFiles import bar_codes_mat_to_numpy
+from CellLineWork.UploadFiles import bar_codes_mat_to_numpy
 import numpy as np
 from config import BasePaths
 import scipy.io as spio
@@ -25,6 +25,8 @@ def visualize_num_genes_per_cell_distribution(num_genes_per_cell, out_file_name=
     plt.plot(range(len(num_genes_per_cell)), num_genes_per_cell)
     plt.xlabel("Cells")
     plt.ylabel("Number of Genes in cell")
+    if not os.path.exists(BasePaths.Images):
+        os.makedirs(BasePaths.Images)
     plt.savefig(join_paths([BasePaths.Images, out_file_name + '.png']))
     gradients = np.gradient(num_genes_per_cell)
     if DEBUG:

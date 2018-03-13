@@ -1,5 +1,9 @@
 import pickle
 from abc import ABCMeta, abstractmethod, abstractproperty
+import logging
+
+from Utilities import join_paths
+from config import BasePaths
 
 
 class Transformer(metaclass=ABCMeta):
@@ -10,28 +14,32 @@ class Transformer(metaclass=ABCMeta):
         raise NotImplementedError
 
     def transform(self, expression_object, *args, **kwargs):
-        out_file_name = expression_object.file_name + self.file_suffix
         try:
-            ret = pickle.load(out_file_name)
-            if ret.get_transformer_version() == self.code_version:
+            with open(self.out_file_path(expression_object), 'r') as in_file:
+                ret = pickle.load(in_file)
+            if ret.composing_items[-1].code_version == self.code_version:
                 return ret
             else:
-                expression_object.log("Wrong code version of transformer, running transformer again")
+                logging.log("Wrong code version of transformer, running transformer again")
                 raise Exception
         except:
-            expression_object.log("Running transformer {}".format(type(self)))
+            logging.info("Running transformer {}".format(type(self)))
             ret = self.transform_aux(expression_object, args, kwargs)
-            out_file_obj = open(out_file_name, 'w')
-            pickle.dump(ret, out_file_obj)
-            out_file_obj.close()
-            expression_object.log(
+            ret.composing_items.append(self)
+            with open(join_paths([BasePaths.Cache, ret.name]), 'wb') as out_file:
+                pickle.dump(ret, out_file)
+            logging.info(
                 "Saved result from transformer {} with parameters {} in {}".format(type(self), self.composing_items,
-                                                                                   out_file_obj))
+                                                                                   self.out_file_path(
+                                                                                       expression_object)))
             return ret
+
+    def out_file_path(self, expression_object):
+        return '_'.join([expression_object.name, self.file_suffix])
 
     @property
     def composing_items(self):
-        return ()
+        return [self.code_version]
 
     @property
     def file_suffix(self):
