@@ -1,5 +1,6 @@
 from PreprocessingPipeline.PipelineBase import PipelineBase
 from PreprocessingPipeline.Transformers.CellFilteringByReadsThreshold import CellFilteringByReadsThreshold
+from PreprocessingPipeline.Transformers.FilterGenesByPopulationExpression import FilterGenesByPopulationExpression
 from PreprocessingPipeline.Transformers.NormalizeExpressionByCell import NormalizeExpressionByCell
 from PreprocessingPipeline.Transformers.UploadMatExpressionMatrix import UploadMatExpressionMatrix
 from config import BasePaths
@@ -16,7 +17,8 @@ class CellLineExpressionMatrix(PipelineBase):
             UploadMatExpressionMatrix(expression_matrix_path=BasePaths.ExpressionMatMatrix,
                                       cell_matrix_path=BasePaths.BarCodes),
             NormalizeExpressionByCell(),
-            CellFilteringByReadsThreshold(min_threshold=4000)
+            CellFilteringByReadsThreshold(min_threshold=4000),
+            FilterGenesByPopulationExpression(min_threshold=5)
 # TODO: continue from here to work on transformer parts
         ]
 
