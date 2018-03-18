@@ -43,6 +43,7 @@ class PipelineBase(metaclass=ABCMeta):
             else:
                 logging.info("Pipeline is different than current pipeline, creating new instance")
                 print("Pipeline is different than current pipeline, creating new instance")
+                raise Exception
         except:
             logging.info("Creating new instance of expression matrix")
             print("Creating new instance of expression matrix")

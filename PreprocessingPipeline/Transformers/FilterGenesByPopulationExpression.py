@@ -23,8 +23,7 @@ class FilterGenesByPopulationExpression(Transformer):
     def plot_matrix(matrix):
         fig, ax = plt.subplots(1, 1)
         ax.plot(range(len(matrix)), np.sort(matrix))
-        ax.xlabel("Genes")
-        ax.ylabel("log2(TPM+1)")
+        ax.set(xlabel="Genes", ylabel="log2(TPM+1)")
         fig.savefig(join_paths([BasePaths.Images, 'gene_count_distribution.png']))
 
     def transform_aux(self, expression_object, *args, **kwargs):
@@ -41,6 +40,7 @@ class FilterGenesByPopulationExpression(Transformer):
         if self.max_threshold is not None:
             keep_indices = np.logical_and(keep_indices, gene_sum_values <= self.max_threshold)
         expression_object.expression_matrix = expression_object.expression_matrix.loc[keep_indices]
+        expression_object.name += self.file_suffix
         return expression_object
 
     @property

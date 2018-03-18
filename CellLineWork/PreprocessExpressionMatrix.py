@@ -23,9 +23,7 @@ def visualize_num_genes_per_cell_distribution(num_genes_per_cell, out_file_name=
     fig, ax = plt.subplots(1, 1)
     num_genes_per_cell = sorted(num_genes_per_cell)
     ax.plot(range(len(num_genes_per_cell)), num_genes_per_cell)
-    ax.set(xlabel ="Cells", ylabel="Number of Genes in cell")
-    # ax.xlabel("Cells")
-    # ax.ylabel("Number of Genes in cell")
+    ax.set(xlabel="Cells", ylabel="Number of Genes in cell")
     if not os.path.exists(BasePaths.Images):
         os.makedirs(BasePaths.Images)
     fig.savefig(join_paths([BasePaths.Images, out_file_name + '.png']))
