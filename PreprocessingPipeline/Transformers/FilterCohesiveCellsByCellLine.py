@@ -30,7 +30,7 @@ class FilterCohesiveCellsByCellLine(Transformer):
         cohesive_cell_indices = [c[0] for c in enumerate(cohesive_cell_indices) if c[1]]
         expression_object.expression_matrix = expression_object.expression_matrix.loc[:, cohesive_cell_indices]
         expression_object.cells_metadata = self.cell_lines
-        expression_object.name += self.file_suffix
+        expression_object.name = self.out_file_name(expression_object.name)
         return expression_object
 
     @property

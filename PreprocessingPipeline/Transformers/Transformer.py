@@ -15,9 +15,9 @@ class Transformer(metaclass=ABCMeta):
 
     def transform(self, expression_object, *args, **kwargs):
         try:
-            with open(self.out_file_path(expression_object), 'r') as in_file:
+            with open(self.out_file_path(expression_object), 'rb') as in_file:
                 ret = pickle.load(in_file)
-            if ret.composing_items[-1].code_version == self.code_version:
+            if ret.composing_items[-1] == self and ret.composing_items[:-1] == expression_object.composing_items:
                 return ret
             else:
                 logging.log("Wrong code version of transformer, running transformer again")
@@ -34,8 +34,17 @@ class Transformer(metaclass=ABCMeta):
                                                                                        expression_object)))
             return ret
 
-    def out_file_path(self, expression_object):
-        return '_'.join([expression_object.name, self.file_suffix])
+    def out_file_name(self, name=None):
+        if name is None:
+            return self.file_suffix
+        else:
+            return name + '_' + self.file_suffix
+
+    def out_file_path(self, expression_object=None, *args, **kwargs):
+        if expression_object is None:
+            return join_paths([BasePaths.Cache, self.out_file_name()])
+        else:
+            return join_paths([BasePaths.Cache, self.out_file_name(expression_object.name)])
 
     @property
     def composing_items(self):
@@ -44,3 +53,7 @@ class Transformer(metaclass=ABCMeta):
     @property
     def file_suffix(self):
         raise NotImplementedError
+
+    def __eq__(self, other):
+        return type(self) == type(
+            other) and self.code_version == other.code_version and self.composing_items == other.composing_items

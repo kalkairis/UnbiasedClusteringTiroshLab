@@ -11,6 +11,9 @@ from config import BasePaths
 
 
 class UploadMatExpressionMatrix(Transformer):
+    def out_file_name(self, name=None):
+        return self.file_suffix
+
     def __init__(self, expression_matrix_path=None, cell_matrix_path=None, cache_directory=BasePaths.Cache):
         self.expression_matrix_path = expression_matrix_path
         self.cell_matrix_path = cell_matrix_path
@@ -36,5 +39,5 @@ class UploadMatExpressionMatrix(Transformer):
         ret.name = self.file_suffix
         return ret
 
-    def out_file_path(self, *args, **kwargs):
+    def out_file_path(self, expression_object=None, *args, **kwargs):
         return join_paths([self.cache_directory, self.file_suffix])

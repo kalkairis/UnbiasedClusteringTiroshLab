@@ -4,14 +4,27 @@ from abc import ABCMeta
 import logging
 from datetime import datetime
 
+from PreprocessingPipeline.ExpressionAndMetaData.ExpressionMetaDataBase import ExpressionMetaDataBase
 from config import BasePaths
 from Utilities import *
+
+
+def pipeline_load_if_exists(path, name, composing_items):
+    try:
+        with open(join_paths([path, name])) as in_file:
+            ret = pickle.load(in_file)
+        if len(composing_items) == len(ret.composing_items) and all(
+                [type(x[0]) == type(x[1]) and x[0].composing_items == x[1].composing_items for x in
+                 zip(composing_items, ret.composing_items)]):
+            return ret
+    except:
+        return None
 
 
 class PipelineBase(metaclass=ABCMeta):
     code_version = 1
 
-    def __init__(self, input_matrix=''):
+    def __init__(self, input_matrix=None):
         self.ExpressionMatrixFirstElement = input_matrix
         self.ExpressionMatrixElement = None
         self.log_path = join_paths([BasePaths.Cache, self.name + datetime.now().strftime("%Y_%m_%d_%H_%M") + ".log"])
@@ -48,7 +61,11 @@ class PipelineBase(metaclass=ABCMeta):
             logging.info("Creating new instance of expression matrix")
             print("Creating new instance of expression matrix")
             ret = self.ExpressionMatrixFirstElement
-            for pipeline_step in self.pipeline_steps:
+            if ret is None:
+                ret = ExpressionMetaDataBase()
+            ret.name = None
+            for i, pipeline_step in enumerate(self.pipeline_steps):
+                # tmp = pipeline_load_if_exists()
                 logging.info("Running pipeline step {}".format(type(pipeline_step)))
                 print("Running pipeline step {}".format(type(pipeline_step)))
                 ret = pipeline_step.transform(ret)

@@ -22,7 +22,7 @@ class CellLineExpressionMatrix(PipelineBase):
             FilterGenesByPopulationExpression(min_threshold=5),
             FilterCohesiveCellsByCellLine(cell_line_file_path=BasePaths.CellLineExpression,
                                           columns_to_compare=['GE_CCLE_match', 'SNP_CL_match'],
-                                           cell_id_column="sample_id")
+                                          cell_id_column="sample_id")
             # TODO: continue from here to work on transformer parts
         ]
 

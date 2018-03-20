@@ -29,7 +29,7 @@ class CellFilteringByReadsThreshold(Transformer):
                                                   num_genes_per_cell <= self.max_threshold]
         visualize_num_genes_per_cell_distribution((expression_object.expression_matrix > 0).sum(axis=0),
                                                   'num_genes_per_cell_filtered')
-        expression_object.name += '_' + self.file_suffix
+        expression_object.name = self.out_file_name(expression_object.name)
         return expression_object
 
     @property

@@ -40,7 +40,7 @@ class FilterGenesByPopulationExpression(Transformer):
         if self.max_threshold is not None:
             keep_indices = np.logical_and(keep_indices, gene_sum_values <= self.max_threshold)
         expression_object.expression_matrix = expression_object.expression_matrix.loc[keep_indices]
-        expression_object.name += self.file_suffix
+        expression_object.name = self.out_file_name(expression_object.name)
         return expression_object
 
     @property
