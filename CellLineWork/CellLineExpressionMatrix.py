@@ -1,5 +1,6 @@
 from PreprocessingPipeline.PipelineBase import PipelineBase
 from PreprocessingPipeline.Transformers.CellFilteringByReadsThreshold import CellFilteringByReadsThreshold
+from PreprocessingPipeline.Transformers.ComputePairWiseDistances import ComputePairWiseDistances
 from PreprocessingPipeline.Transformers.FilterCohesiveCellsByCellLine import FilterCohesiveCellsByCellLine
 from PreprocessingPipeline.Transformers.FilterGenesByPopulationExpression import FilterGenesByPopulationExpression
 from PreprocessingPipeline.Transformers.NormalizeExpressionByCell import NormalizeExpressionByCell
@@ -22,7 +23,8 @@ class CellLineExpressionMatrix(PipelineBase):
             FilterGenesByPopulationExpression(min_threshold=5),
             FilterCohesiveCellsByCellLine(cell_line_file_path=BasePaths.CellLineExpression,
                                           columns_to_compare=['GE_CCLE_match', 'SNP_CL_match'],
-                                          cell_id_column="sample_id")
+                                          cell_id_column="sample_id"),
+            ComputePairWiseDistances()
             # TODO: continue from here to work on transformer parts
         ]
 
