@@ -20,20 +20,19 @@ def open_expression_mat():
 
 
 def visualize_num_genes_per_cell_distribution(num_genes_per_cell, out_file_name='num_genes_per_cell'):
-    plt.subplot()
+    fig, ax = plt.subplots(1, 1)
     num_genes_per_cell = sorted(num_genes_per_cell)
-    plt.plot(range(len(num_genes_per_cell)), num_genes_per_cell)
-    plt.xlabel("Cells")
-    plt.ylabel("Number of Genes in cell")
+    ax.plot(range(len(num_genes_per_cell)), num_genes_per_cell)
+    ax.set(xlabel="Cells", ylabel="Number of Genes in cell")
     if not os.path.exists(BasePaths.Images):
         os.makedirs(BasePaths.Images)
-    plt.savefig(join_paths([BasePaths.Images, out_file_name + '.png']))
+    fig.savefig(join_paths([BasePaths.Images, out_file_name + '.png']))
     gradients = np.gradient(num_genes_per_cell)
     if DEBUG:
         plt.show()
-    plt.subplot()
-    plt.plot(range(len(gradients)), gradients, '-')
-    plt.savefig(join_paths([BasePaths.Images, out_file_name + '_gradient_o_.png']))
+    fig, ax = plt.subplots(1, 1)
+    ax.plot(range(len(gradients)), gradients, '-')
+    fig.savefig(join_paths([BasePaths.Images, out_file_name + '_gradient_o_.png']))
     if DEBUG:
         plt.show()
 

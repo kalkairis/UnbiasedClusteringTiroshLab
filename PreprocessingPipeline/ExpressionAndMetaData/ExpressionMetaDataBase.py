@@ -3,3 +3,6 @@ class ExpressionMetaDataBase:
         self.expression_matrix = expression_matrix
         self.cells_matrix = cells_matrix
         self.composing_items = composing_items
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
