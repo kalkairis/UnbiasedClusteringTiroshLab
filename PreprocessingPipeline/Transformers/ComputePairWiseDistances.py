@@ -3,6 +3,16 @@ import numpy as np
 
 
 class ComputePairWiseDistances(Transformer):
+    def transform_aux(self, expression_object, *args, **kwargs):
+        expression_mat = expression_object.expression_matrix
+        distances = expression_mat.apply(
+            lambda x: expression_mat.apply(lambda y: self.distance_methods[self.distance_method](x, y),
+                                           axis=self.axis_conversions[self.axis]),
+            axis=self.axis_conversions[self.axis])
+        expression_object.distances = distances
+        expression_object.name = self.out_file_name(expression_object.name)
+        return expression_object
+
     @property
     def axis_conversions(self):
         return {'cells': 0, 'genes': 1}
@@ -34,10 +44,3 @@ class ComputePairWiseDistances(Transformer):
     def euclidean_distance(element_1, element_2):
         dist = np.linalg.norm(element_1 - element_2)
         return dist
-
-    def transform_aux(self, expression_object, *args, **kwargs):
-        distances = expression_object.expression_matrix.apply(lambda x: expression_object.expression_matrix.apply(
-            lambda y: self.distance_methods[self.distance_method](x, y), axis=self.axis_conversions[self.axis]),
-                                                  axis=self.axis_conversions[self.axis])
-        expression_object.distances = distances
-        expression_object.name = self.out_file_name(expression_object.name)

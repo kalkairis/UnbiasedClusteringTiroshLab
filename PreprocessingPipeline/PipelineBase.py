@@ -63,7 +63,7 @@ class PipelineBase(metaclass=ABCMeta):
             ret = self.ExpressionMatrixFirstElement
             if ret is None:
                 ret = ExpressionMetaDataBase()
-            ret.name = None
+            ret.name = self.name
             for i, pipeline_step in enumerate(self.pipeline_steps):
                 # tmp = pipeline_load_if_exists()
                 logging.info("Running pipeline step {}".format(type(pipeline_step)))

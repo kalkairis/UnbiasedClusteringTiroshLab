@@ -1,3 +1,4 @@
+from PreprocessingPipeline.AnalysesTools.AnalyzeDistanceMatrix import AnalyzeDistanceMatrix
 from PreprocessingPipeline.PipelineBase import PipelineBase
 from PreprocessingPipeline.Transformers.CellFilteringByReadsThreshold import CellFilteringByReadsThreshold
 from PreprocessingPipeline.Transformers.ComputePairWiseDistances import ComputePairWiseDistances
@@ -30,7 +31,11 @@ class CellLineExpressionMatrix(PipelineBase):
 
 
 if __name__ == "__main__":
+    import sys
+    print(sys.path)
     M = CellLineExpressionMatrix()
     X = M.execute()
+    A = AnalyzeDistanceMatrix()
+    A.analyze(X)
     print(X.expression_matrix.head())
     print("bla")
