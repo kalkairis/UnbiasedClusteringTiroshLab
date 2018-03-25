@@ -7,9 +7,9 @@ from sys import platform
 class BasePaths:
     if platform.startswith("win"):
         RawDataFolder = join_paths(['D:', 'Box Sync', 'TiroshLab', 'RawData'])
-    elif platform=='linux':
+    elif platform == 'linux':
         RawDataFolder = join_paths(['/home', 'labs', 'tirosh', 'itayt', 'cell_lines'])
-    elif platform=="darwin":
+    elif platform == "darwin":
         # RawDataFolder = join_paths()
         pass
     Pilot19 = join_paths([RawDataFolder, 'pilot_19'])
@@ -19,4 +19,3 @@ class BasePaths:
     BarCodes = join_paths([Pilot19, 'barcodes.tsv'])
     Cache = join_paths(['/home', 'labs', 'tirosh', getpass.getuser(), 'PipelineCache'])
     Images = join_paths([Cache, 'images'])
-
