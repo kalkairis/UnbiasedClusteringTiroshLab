@@ -17,13 +17,10 @@ class BasePaths:
         UserFolder = join_paths(['D:', 'Box Sync', 'TiroshLab'])
     elif platform == 'linux':
         RawDataFolder = join_paths(['/home', 'labs', 'tirosh', 'itayt', 'cell_lines'])
-    elif platform == "darwin":
-        # RawDataFolder = join_paths()
-        pass
         UserFolder = join_paths(['/home', 'labs', 'tirosh', getpass.getuser()])
     elif platform == 'darwin':
-        RawDataFolder = join_paths(['/Volumes', 'cell_lines'])
-        UserFolder = join_paths(['/Volumes', get_user_name()])
+        RawDataFolder = join_paths(['../../../Dropbox (Weizmann Institute)', 'RawDataCopy'])
+        UserFolder = join_paths(['../../../Dropbox (Weizmann Institute)', 'CacheCopy'])
     Pilot19 = join_paths([RawDataFolder, 'pilot_19'])
     ExpressionMatMatrix = join_paths([Pilot19, 'matrix.mtx'])
     ExpressionProcessed = join_paths([Pilot19, 'expression_preprocessed_matrix.npy'])
