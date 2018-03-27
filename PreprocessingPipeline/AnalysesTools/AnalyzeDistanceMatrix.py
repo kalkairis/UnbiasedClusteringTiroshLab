@@ -18,7 +18,7 @@ class AnalyzeDistanceMatrix(BaseAnalysis):
         upper_distances = upper_distances[upper_distances > 0]
         plt.subplot()
         sns.distplot(upper_distances)
-        plt.savefig(join_paths[self.outfile_path, name + 'distance_distribution.png'])
+        plt.savefig(join_paths([self.outfile_path, name + 'distance_distribution.png']))
 
     def analyze(self, expression_object, **kwargs):
         distances = expression_object.distances
