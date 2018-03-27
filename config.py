@@ -17,6 +17,9 @@ class BasePaths:
         UserFolder = join_paths(['D:', 'Box Sync', 'TiroshLab'])
     elif platform == 'linux':
         RawDataFolder = join_paths(['/home', 'labs', 'tirosh', 'itayt', 'cell_lines'])
+    elif platform == "darwin":
+        # RawDataFolder = join_paths()
+        pass
         UserFolder = join_paths(['/home', 'labs', 'tirosh', getpass.getuser()])
     elif platform == 'darwin':
         RawDataFolder = join_paths(['/Volumes', 'cell_lines'])
