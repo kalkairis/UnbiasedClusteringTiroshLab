@@ -1,5 +1,8 @@
 import sys
 import os
+
+from PreprocessingPipeline.Transformers.TransformToTPMAndCenter import TransformToTPMAndCenter
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from PreprocessingPipeline.AnalysesTools.AnalyzeDistanceMatrix import AnalyzeDistanceMatrix
 from PreprocessingPipeline.PipelineBase import PipelineBase
@@ -25,18 +28,20 @@ class CellLineExpressionMatrix(PipelineBase):
                                       cell_matrix_path=BasePaths.BarCodes),
             NormalizeExpressionByCell(),
             CellFilteringByReadsThreshold(min_threshold=4000),
-            FilterGenesByPopulationExpression(min_threshold=5),
-            FilterCohesiveCellsByCellLine(cell_line_file_path=BasePaths.CellLineExpression,
-                                          columns_to_compare=['GE_CCLE_match', 'SNP_CL_match'],
-                                          cell_id_column="sample_id"),
-            ComputePairWiseDistances(),
-            ClusterExpressionIntoTree()
+            FilterGenesByPopulationExpression(min_threshold=3),
+            TransformToTPMAndCenter(),
+            # FilterCohesiveCellsByCellLine(cell_line_file_path=BasePaths.CellLineExpression,
+            #                               columns_to_compare=['GE_CCLE_match', 'SNP_CL_match'],
+            #                               cell_id_column="sample_id"),
+            # ComputePairWiseDistances(),
+            # ClusterExpressionIntoTree()
             # TODO: continue from here to work on transformer parts
         ]
 
 
 if __name__ == "__main__":
     import sys
+
     print(sys.path)
     M = CellLineExpressionMatrix()
     X = M.execute()

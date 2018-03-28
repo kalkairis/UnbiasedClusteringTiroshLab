@@ -25,11 +25,13 @@ class FilterGenesByPopulationExpression(Transformer):
         ax.plot(range(len(matrix)), np.sort(matrix))
         ax.set(xlabel="Genes", ylabel="log2(TPM+1)")
         fig.savefig(join_paths([BasePaths.Images, 'gene_count_distribution.png']))
+        fig, ax = plt.subplots(1,1)
+        ax.hist(matrix)
+        fig.savefig(join_paths([BasePaths.Images, 'gene_count_histogram.png']))
 
     def transform_aux(self, expression_object, *args, **kwargs):
         gene_sum_values = expression_object.expression_matrix.values
-        gene_sum_values = gene_sum_values.sum(axis=1)
-        gene_sum_values *= 10 ** 6
+        gene_sum_values = gene_sum_values.mean(axis=1)
         gene_sum_values += 1
         gene_sum_values = np.log2(gene_sum_values)
 

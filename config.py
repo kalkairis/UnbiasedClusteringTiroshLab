@@ -4,6 +4,8 @@ from collections import defaultdict
 from Utilities import *
 from sys import platform
 
+global DEBUG
+DEBUG = True
 
 def get_user_name():
     name_dictionary = defaultdict(lambda x: x)
@@ -19,8 +21,8 @@ class BasePaths:
         RawDataFolder = join_paths(['/home', 'labs', 'tirosh', 'itayt', 'cell_lines'])
         UserFolder = join_paths(['/home', 'labs', 'tirosh', getpass.getuser()])
     elif platform == 'darwin':
-        RawDataFolder = join_paths(['../../../Dropbox (Weizmann Institute)', 'RawDataCopy'])
-        UserFolder = join_paths(['../../../Dropbox (Weizmann Institute)', 'CacheCopy'])
+        RawDataFolder = join_paths(['/Users/iriskalka/Dropbox (Weizmann Institute)', 'RawDataCopy'])
+        UserFolder = join_paths(['/Users/iriskalka/Dropbox (Weizmann Institute)', 'CacheCopy'])
     Pilot19 = join_paths([RawDataFolder, 'pilot_19'])
     ExpressionMatMatrix = join_paths([Pilot19, 'matrix.mtx'])
     ExpressionProcessed = join_paths([Pilot19, 'expression_preprocessed_matrix.npy'])

@@ -1,8 +1,9 @@
 import pickle
-from abc import ABCMeta, abstractmethod, abstractproperty
+from abc import ABCMeta, abstractmethod
 import logging
 
 from Utilities import join_paths
+import config
 from config import BasePaths
 
 
@@ -15,6 +16,8 @@ class Transformer(metaclass=ABCMeta):
 
     def transform(self, expression_object, *args, **kwargs):
         try:
+            if config.DEBUG and not self.ignore_debug:
+                raise IOError
             with open(self.out_file_path(expression_object), 'rb') as in_file:
                 ret = pickle.load(in_file)
             if ret.composing_items[-1] == self and ret.composing_items[:-1] == expression_object.composing_items:
@@ -33,6 +36,8 @@ class Transformer(metaclass=ABCMeta):
                                                                                    self.out_file_path(
                                                                                        expression_object)))
             return ret
+
+    ignore_debug = False
 
     def out_file_name(self, name=None):
         if name is None:

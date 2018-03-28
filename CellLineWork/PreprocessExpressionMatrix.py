@@ -1,20 +1,19 @@
 from Utilities import *
 from CellLineWork.UploadFiles import bar_codes_mat_to_numpy
 import numpy as np
+import config
 from config import BasePaths
 import scipy.io as spio
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
-DEBUG = False
-
 
 def open_expression_mat():
     ret = spio.mmread(BasePaths.ExpressionMatMatrix)
     ret = ret.todense()
     barcodes = load_if_cached(BasePaths.BarCodes, bar_codes_mat_to_numpy)
-    print_log("barcodes: {}".format(barcodes), DEBUG)
+    print_log("barcodes: {}".format(barcodes), config.DEBUG)
     ret = pd.DataFrame(data=ret, columns=barcodes)
     return ret
 
@@ -28,12 +27,12 @@ def visualize_num_genes_per_cell_distribution(num_genes_per_cell, out_file_name=
         os.makedirs(BasePaths.Images)
     fig.savefig(join_paths([BasePaths.Images, out_file_name + '.png']))
     gradients = np.gradient(num_genes_per_cell)
-    if DEBUG:
+    if config.DEBUG:
         plt.show()
     fig, ax = plt.subplots(1, 1)
     ax.plot(range(len(gradients)), gradients, '-')
     fig.savefig(join_paths([BasePaths.Images, out_file_name + '_gradient_o_.png']))
-    if DEBUG:
+    if config.DEBUG:
         plt.show()
 
 
@@ -44,10 +43,10 @@ def normalize_by_cell(exp_matrix):
 
 def filter_cells(exp_matrix):
     num_genes_per_cell = (exp_matrix > 0).sum(axis=0)
-    if DEBUG:
+    if config.DEBUG:
         visualize_num_genes_per_cell_distribution(num_genes_per_cell)
     filtered_by_cells_exp_matrix = exp_matrix.loc[:, num_genes_per_cell >= 4000]
-    if DEBUG:
+    if config.DEBUG:
         visualize_num_genes_per_cell_distribution((filtered_by_cells_exp_matrix > 0).sum(axis=0),
                                                   'num_genes_per_cell_filtered')
     return filtered_by_cells_exp_matrix
@@ -66,19 +65,19 @@ def filter_genes(exp_matrix):
     plt.xlabel("Genes")
     plt.ylabel("log2(TPM+1)")
     plt.savefig(join_paths([BasePaths.Images, 'gene_count_distribution.png']))
-    if DEBUG:
+    if config.DEBUG:
         plt.show()
     plt.show()
     return exp_matrix.loc[exp_matrix_values >= 5]
 
 
 def pre_process_expression_matrix():
-    print_log(os.getcwd(), DEBUG)
+    print_log(os.getcwd(), config.DEBUG)
     expression_matrix = open_expression_mat()
     expression_matrix = normalize_by_cell(expression_matrix)
     expression_matrix = filter_cells(expression_matrix)
     expression_matrix = filter_genes(expression_matrix)
-    print_log(expression_matrix.head(), DEBUG)
+    print_log(expression_matrix.head(), config.DEBUG)
     expression_matrix.to_pickle(join_paths([BasePaths.ExpressionProcessed]))
     return expression_matrix
 
