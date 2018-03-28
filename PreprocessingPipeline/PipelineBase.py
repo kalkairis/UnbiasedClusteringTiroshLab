@@ -5,8 +5,10 @@ import logging
 from datetime import datetime
 
 from PreprocessingPipeline.ExpressionAndMetaData.ExpressionMetaDataBase import ExpressionMetaDataBase
+import config
 from config import BasePaths
 from Utilities import *
+
 
 
 def pipeline_load_if_exists(path, name, composing_items):
@@ -29,6 +31,7 @@ class PipelineBase(metaclass=ABCMeta):
         self.ExpressionMatrixElement = None
         self.log_path = join_paths([BasePaths.Cache, self.name + datetime.now().strftime("%Y_%m_%d_%H_%M") + ".log"])
         if not os.path.exists(BasePaths.Cache):
+            print("trying to create {} directory".format(BasePaths.Cache))
             os.makedirs(BasePaths.Cache)
         log_file = open(self.log_path, 'w')
         log_file.close()
@@ -47,6 +50,8 @@ class PipelineBase(metaclass=ABCMeta):
         if self.ExpressionMatrixElement is not None:
             return self.ExpressionMatrixElement
         try:
+            if config.DEBUG:
+                raise IOError
             with open(join_paths([BasePaths.Cache, self.name]), 'rb') as in_file:
                 self.ExpressionMatrixElement = pickle.load(in_file)
             if len(self.pipeline_steps) == len(self.ExpressionMatrixElement.composing_items) and all(

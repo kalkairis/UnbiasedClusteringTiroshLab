@@ -41,3 +41,5 @@ class UploadMatExpressionMatrix(Transformer):
 
     def out_file_path(self, expression_object=None, *args, **kwargs):
         return join_paths([self.cache_directory, self.file_suffix])
+
+    ignore_debug = True
