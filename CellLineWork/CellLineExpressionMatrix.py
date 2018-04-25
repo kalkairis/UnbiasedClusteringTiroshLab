@@ -1,5 +1,6 @@
 import sys
 import os
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 from PreprocessingPipeline.Transformers.TransformToTPMAndCenter import TransformToTPMAndCenter
 
@@ -34,7 +35,7 @@ class CellLineExpressionMatrix(PipelineBase):
             #                               columns_to_compare=['GE_CCLE_match', 'SNP_CL_match'],
             #                               cell_id_column="sample_id"),
             # ComputePairWiseDistances(),
-            # ClusterExpressionIntoTree()
+            ClusterExpressionIntoTree()
             # TODO: continue from here to work on transformer parts
         ]
 
