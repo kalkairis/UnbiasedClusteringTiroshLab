@@ -10,7 +10,6 @@ from config import BasePaths
 from Utilities import *
 
 
-
 def pipeline_load_if_exists(path, name, composing_items):
     try:
         with open(join_paths([path, name])) as in_file:
@@ -26,13 +25,15 @@ def pipeline_load_if_exists(path, name, composing_items):
 class PipelineBase(metaclass=ABCMeta):
     code_version = 1
 
-    def __init__(self, input_matrix=None):
+    def __init__(self, input_matrix=None, cache_dir_path=BasePaths.Cache, DEBUG=False):
         self.ExpressionMatrixFirstElement = input_matrix
         self.ExpressionMatrixElement = None
-        self.log_path = join_paths([BasePaths.Cache, self.name + datetime.now().strftime("%Y_%m_%d_%H_%M") + ".log"])
-        if not os.path.exists(BasePaths.Cache):
-            print("trying to create {} directory".format(BasePaths.Cache))
-            os.makedirs(BasePaths.Cache)
+        self.cache_dir = cache_dir_path
+        self.DEBUG = DEBUG
+        self.log_path = join_paths([cache_dir_path, self.name + datetime.now().strftime("%Y_%m_%d_%H_%M") + ".log"])
+        if not os.path.exists(cache_dir_path):
+            print("trying to create {} directory".format(cache_dir_path))
+            os.makedirs(cache_dir_path)
         log_file = open(self.log_path, 'w')
         log_file.close()
         logging.basicConfig(filename=self.log_path)
@@ -50,9 +51,9 @@ class PipelineBase(metaclass=ABCMeta):
         if self.ExpressionMatrixElement is not None:
             return self.ExpressionMatrixElement
         try:
-            if config.DEBUG:
+            if self.DEBUG:
                 raise IOError
-            with open(join_paths([BasePaths.Cache, self.name]), 'rb') as in_file:
+            with open(join_paths([self.cache_dir, self.name]), 'rb') as in_file:
                 self.ExpressionMatrixElement = pickle.load(in_file)
             if len(self.pipeline_steps) == len(self.ExpressionMatrixElement.composing_items) and all(
                     [type(x[0]) == type(x[1]) and x[0].composing_items == x[1].composing_items for x in
@@ -77,6 +78,6 @@ class PipelineBase(metaclass=ABCMeta):
                 logging.info("Finished pipeline step {}".format(type(pipeline_step)))
                 "Finished pipeline step {}".format(type(pipeline_step))
             self.ExpressionMatrixElement = ret
-            with open(join_paths([BasePaths.Cache, self.name]), 'wb') as out_file:
+            with open(join_paths([self.cache_dir, self.name]), 'wb') as out_file:
                 pickle.dump(self.ExpressionMatrixElement, out_file)
             return ret

@@ -6,7 +6,8 @@ from config import BasePaths
 
 
 class FilterGenesByPopulationExpression(Transformer):
-    def __init__(self, min_threshold=None, max_threshold=None):
+    def __init__(self, min_threshold=None, max_threshold=None, cache_directory=BasePaths.Cache):
+        super(FilterGenesByPopulationExpression, self).__init__(cache_dir=cache_directory)
         self.min_threshold = min_threshold
         self.max_threshold = max_threshold
 
@@ -19,15 +20,14 @@ class FilterGenesByPopulationExpression(Transformer):
             ret += 'Max' + str(self.max_threshold)
         return ret
 
-    @staticmethod
-    def plot_matrix(matrix):
+    def plot_matrix(self, matrix):
         fig, ax = plt.subplots(1, 1)
         ax.plot(range(len(matrix)), np.sort(matrix))
         ax.set(xlabel="Genes", ylabel="log2(TPM+1)")
-        fig.savefig(join_paths([BasePaths.Images, 'gene_count_distribution.png']))
+        fig.savefig(join_paths([self.images_dir, 'gene_count_distribution.png']))
         fig, ax = plt.subplots(1,1)
         ax.hist(matrix)
-        fig.savefig(join_paths([BasePaths.Images, 'gene_count_histogram.png']))
+        fig.savefig(join_paths([self.images_dir, 'gene_count_histogram.png']))
 
     def transform_aux(self, expression_object, *args, **kwargs):
         gene_sum_values = expression_object.expression_matrix.values

@@ -2,6 +2,8 @@ import pickle
 from abc import ABCMeta, abstractmethod
 import logging
 
+import os
+
 from Utilities import join_paths
 import config
 from config import BasePaths
@@ -10,13 +12,22 @@ from config import BasePaths
 class Transformer(metaclass=ABCMeta):
     code_version = 1
 
+    def __init__(self, cache_dir=BasePaths.Cache, DEBUG=False):
+        self.cache_dir = cache_dir
+        self.images_dir = os.path.join(self.cache_dir, 'Images')
+        self.DEBUG = DEBUG
+        if not os.path.exists(self.cache_dir):
+            os.makedirs(self.cache_dir)
+        if not os.path.exists(self.images_dir):
+            os.makedirs(self.images_dir)
+
     @abstractmethod
     def transform_aux(self, expression_object, *args, **kwargs):
         raise NotImplementedError
 
     def transform(self, expression_object, *args, **kwargs):
         try:
-            if config.DEBUG and not self.ignore_debug:
+            if self.DEBUG and not self.ignore_debug:
                 raise IOError
             with open(self.out_file_path(expression_object), 'rb') as in_file:
                 ret = pickle.load(in_file)
@@ -29,7 +40,7 @@ class Transformer(metaclass=ABCMeta):
             logging.info("Running transformer {}".format(type(self)))
             ret = self.transform_aux(expression_object, args, kwargs)
             ret.composing_items.append(self)
-            with open(join_paths([BasePaths.Cache, ret.name]), 'wb') as out_file:
+            with open(join_paths([self.cache_dir, ret.name]), 'wb') as out_file:
                 pickle.dump(ret, out_file)
             logging.info(
                 "Saved result from transformer {} with parameters {} in {}".format(type(self), self.composing_items,
@@ -47,13 +58,13 @@ class Transformer(metaclass=ABCMeta):
 
     def out_file_path(self, expression_object=None, *args, **kwargs):
         if expression_object is None:
-            return join_paths([BasePaths.Cache, self.out_file_name()])
+            return join_paths([self.cache_dir, self.out_file_name()])
         else:
-            return join_paths([BasePaths.Cache, self.out_file_name(expression_object.name)])
+            return join_paths([self.cache_dir, self.out_file_name(expression_object.name)])
 
     @property
     def composing_items(self):
-        return [self.code_version]
+        return [self.cache_dir, self.code_version]
 
     @property
     def file_suffix(self):
