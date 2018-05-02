@@ -58,7 +58,7 @@ if __name__ == "__main__":
                              '\n1. matrix.mtx Matlab expression matrix'
                              '\n2. barcodes.tsv Matlab barcodes of cells'
                              '\n3. genes.tsv Matlab genes',
-                        default=BasePaths.ExpressionMatMatrix)
+                        default=BasePaths.Pilot19)
     parser.add_argument('--min_reads_per_cell', action='store', dest='min_reads_per_cell', type=int,
                         help='Minimal number of reads in cells, cells with less reads than threshold will be discarded',
                         default=4000)
