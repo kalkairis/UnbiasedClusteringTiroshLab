@@ -1,4 +1,6 @@
 import csv
+import logging
+
 import numpy as np
 import os
 import pandas as pd
@@ -30,6 +32,17 @@ class UploadMatExpressionMatrix(Transformer):
         return "FromMatExpressionMatrix"
 
     @staticmethod
+    def remove_repeating_genes(expression_obj):
+        repeating_genes = expression_obj.expression_matrix.index.value_counts()
+        repeating_genes = repeating_genes.index.values[repeating_genes>1]
+        logging.info("Combining repeating genes' expressions for genes {}".format(repeating_genes))
+        for gene in repeating_genes:
+            new_values = expression_obj.expression_matrix.loc[gene].sum()
+            expression_obj.expression_matrix.drop(index=gene, inplace=True)
+            expression_obj.expression_matrix.loc[gene] = new_values
+        return expression_obj
+
+    @staticmethod
     def read_tsv_file(path):
         ret = np.array([])
         with open(path, 'r') as in_file:
@@ -49,6 +62,7 @@ class UploadMatExpressionMatrix(Transformer):
 
         ret = ExpressionMetaDataBase(expression_matrix=expression_matrix, cells_matrix=cells_matrix,
                                      genes_matrix=genes_matrix)
+        ret = self.remove_repeating_genes(ret)
         ret.name = self.file_suffix
         return ret
 
