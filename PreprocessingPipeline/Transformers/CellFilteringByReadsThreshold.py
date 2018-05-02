@@ -1,5 +1,3 @@
-import os
-
 from CellLineWork.PreprocessExpressionMatrix import visualize_num_genes_per_cell_distribution
 from PreprocessingPipeline.Transformers.Transformer import Transformer
 from config import BasePaths

@@ -23,17 +23,12 @@ class CellLineExpressionMatrix(PipelineBase):
                  min_reads_per_cell=4000, max_reads_per_cell=None,
                  minimal_mean_expression_of_gene=3,
                  maximal_mean_expression_of_gene=None,
-                 cache_dir_path=BasePaths.Cache, cell_line_assignment_file=None,
-                 cell_line_assignment_comparison_col1=None,
-                 cell_line_assignment_comparison_col2=None, DEBUG=False):
+                 cache_dir_path=BasePaths.Cache, DEBUG=False):
         self.dir_path_10x = dir_path_10x
         self.min_reads_per_cell = min_reads_per_cell
         self.max_reads_per_cell = max_reads_per_cell
         self.minimal_mean_expression_of_gene = minimal_mean_expression_of_gene
         self.maximal_mean_expression_of_gene = maximal_mean_expression_of_gene
-        self.cell_line_assignment_file = cell_line_assignment_file
-        self.cell_line_assignment_comparison_col1 = cell_line_assignment_comparison_col1
-        self.cell_line_assignment_comparison_col2 = cell_line_assignment_comparison_col2
         super(CellLineExpressionMatrix, self).__init__(cache_dir_path=cache_dir_path, DEBUG=DEBUG)
 
     @property
@@ -81,18 +76,6 @@ if __name__ == "__main__":
     parser.add_argument('--cache_dir_path', action='store', dest='cache_dir_path',
                         help='Absolute path for cache directory',
                         default=BasePaths.Cache)
-    parser.add_argument('--cell_line_assignment_file', action='store', dest='cell_line_assignment_file',
-                        help='If separating to different origins then the path of'
-                             ' CSV containing the different assignments.'
-                             '\nNotice you will also need to set the names of assignments to use.',
-                        default=None)
-    parser.add_argument('--cell_line_assignment_comparison_col1', action='store',
-                        dest='cell_line_assignment_comparison_col1',
-                        help='First column to compare cell line assignments', default=None)
-    parser.add_argument('--cell_line_assignment_comparison_col2', action='store',
-                        dest='cell_line_assignment_comparison_col2',
-                        help='Second column to compare cell line assignments', default=None)
-    parser.add_argument('--DEBUG', dest='DEBUG', action='store_true', default=False)
     args = parser.parse_args()
     print(*args.__dict__)
     M = CellLineExpressionMatrix(**args.__dict__)
