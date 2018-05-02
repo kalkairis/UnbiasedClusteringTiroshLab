@@ -34,10 +34,6 @@ class PipelineBase(metaclass=ABCMeta):
         if not os.path.exists(cache_dir_path):
             print("trying to create {} directory".format(cache_dir_path))
             os.makedirs(cache_dir_path)
-        log_file = open(self.log_path, 'w')
-        log_file.close()
-        logging.basicConfig(filename=self.log_path)
-        print(f"Logging into {self.log_path}")
 
     @property
     def pipeline_steps(self):
@@ -60,10 +56,17 @@ class PipelineBase(metaclass=ABCMeta):
                      zip(self.ExpressionMatrixElement.composing_items, self.pipeline_steps)]):
                 return self.ExpressionMatrixElement
             else:
+                log_file = open(self.log_path, 'w')
+                log_file.close()
+                logging.basicConfig(filename=self.log_path)
+                print(f"Logging into {self.log_path}")
                 logging.info("Pipeline is different than current pipeline, creating new instance")
                 print("Pipeline is different than current pipeline, creating new instance")
                 raise Exception
         except:
+            log_file = open(self.log_path, 'w')
+            log_file.close()
+            logging.basicConfig(filename=self.log_path)
             logging.info("Creating new instance of expression matrix")
             print("Creating new instance of expression matrix")
             ret = self.ExpressionMatrixFirstElement
